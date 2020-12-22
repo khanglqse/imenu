@@ -127,6 +127,7 @@ const ItemDetails = styled.div`
   display: inline-flex;
   flex-direction: column;
   width: 100%;
+  cursor: pointer;
 `;
 
 const ItemTitle = styled.span`
@@ -151,6 +152,12 @@ const ItemWeight = styled.span`
   font-weight: ${themeGet('fontWeights.regular', '400')};
   color: ${themeGet('colors.text.regular', '#77798c')};
 `;
+
+const AddonItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
 
 const TotalPrice = styled.span`
   font-family: ${themeGet('fonts.body', 'Lato')};
@@ -405,4 +412,5 @@ export {
   ItemWrapper,
   CouponBoxWrapper,
   CouponCode,
+  AddonItem,
 };

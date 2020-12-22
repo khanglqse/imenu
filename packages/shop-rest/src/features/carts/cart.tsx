@@ -33,6 +33,7 @@ type CartPropsType = {
   className?: string;
   scrollbarHeight?: string;
   onCloseBtnClick?: (e: any) => void;
+  deviceType: any;
 };
 
 const Cart: React.FC<CartPropsType> = ({
@@ -40,6 +41,7 @@ const Cart: React.FC<CartPropsType> = ({
   className,
   onCloseBtnClick,
   scrollbarHeight,
+  deviceType,
 }) => {
   const {
     items,

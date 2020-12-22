@@ -91,7 +91,7 @@ const CartPopUp: React.FC<CartProps> = ({
         <>
           <CartSlidePopup className={cartSliderClass}>
             {isOpen && (
-              <Cart onCloseBtnClick={toggleCart} scrollbarHeight='100vh' />
+              <Cart deviceType={{mobile, desktop, tablet}} onCloseBtnClick={toggleCart} scrollbarHeight='100vh' />
             )}
           </CartSlidePopup>
 
