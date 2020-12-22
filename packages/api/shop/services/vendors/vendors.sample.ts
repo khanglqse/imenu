@@ -34,6 +34,14 @@ export const vendorSamples = [
         description:
           'Prepared with a patty, a slice of cheese and special sauce',
         price: 5.0,
+        addons: [
+          {
+            id: '1',
+            name: 'khang',
+            price: 5,
+            
+          }
+        ]
       },
       {
         id: '2002',

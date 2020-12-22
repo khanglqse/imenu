@@ -28,4 +28,26 @@ export class VendorProduct {
 
   @Field({ nullable: true })
   updatedAt?: Date;
+
+  @Field(() => [Addon], { nullable: true })
+  addons?: Addon[];
+}
+
+
+@ObjectType()
+export class Addon {
+  @Field(() => ID)
+  id: string;
+
+  @Field()
+  name: string;
+  
+  @Field(() => Int)
+  price: number;
+
+  @Field({ nullable: true })
+  categories?: string;
+
+  @Field({ nullable: true })
+  description?: string;
 }

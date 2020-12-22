@@ -42,6 +42,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       notifyOnNetworkStatusChange: true,
     }
   );
+  
   const loadingMore = networkStatus === NetworkStatus.fetchMore;
 
   if (loading && !loadingMore) {

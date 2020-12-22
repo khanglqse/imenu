@@ -36,6 +36,7 @@ import Sticky from 'react-stickynode';
 import { groupBy } from 'utils/group-by';
 import { useCart } from 'contexts/cart/use-cart';
 import { PlusOutline } from 'assets/icons/plus-outline-icon';
+import { Minus } from 'assets/icons/plus-minus-icon';
 import { useMedia } from 'utils/use-media';
 
 type ProductDetailsProps = {
@@ -152,6 +153,15 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                       <ItemName>{item.name}</ItemName>
                       <ItemDetails>{item.description}</ItemDetails>
                     </ItemNameDetails>
+
+                    <Button
+                      variant='select'
+                      type='button'
+                      className={isInCart(item.id) ? 'selected' : ''}
+                      onClick={() => handleAddClick(item)}
+                    >
+                      <Minus width='14px' height='14px' />
+                    </Button>
 
                     <ItemNamePricing>
                       <HelpText>
