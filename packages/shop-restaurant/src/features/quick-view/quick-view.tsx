@@ -1,6 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
-// import { closeModal } from '@redq/reuse-modal';
+import { closeModal } from '@redq/reuse-modal';
 import { Button } from 'components/button/button';
 import {
   QuickViewWrapper,
@@ -26,6 +26,7 @@ import {
 } from './quick-view.style';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { CartIcon } from 'assets/icons/CartIcon';
+import { CURRENCY } from 'utils/constant';
 
 import ReadMore from 'components/truncate/truncate';
 import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
@@ -33,19 +34,17 @@ import { useLocale } from 'contexts/language/language.provider';
 import { useCart } from 'contexts/cart/use-cart';
 import { Counter } from 'components/counter/counter';
 import { FormattedMessage } from 'react-intl';
-const CURRENCY = '$'
+
 type QuickViewProps = {
   modalProps: any;
-  onModalClose?: any;
-  hideModal: () => void;
   deviceType: any;
+  onModalClose: any;
 };
 
-const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
+const QuickView: React.FunctionComponent<QuickViewProps> = ({
   modalProps,
-  onModalClose,
-  hideModal,
   deviceType,
+  onModalClose,
 }) => {
   const { addItem, removeItem, isInCart, getItem } = useCart();
   const {
@@ -77,21 +76,23 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
       pathname: `/${type.toLowerCase()}`,
       query: { category: slug },
     }).then(() => window.scrollTo(0, 0));
-    hideModal();
+    closeModal();
   }
 
   return (
     <>
-      {/* <ModalClose onClick={onModalClose}>
+      <ModalClose onClick={onModalClose}>
         <CloseIcon />
-      </ModalClose> */}
-      <QuickViewWrapper className='quick-view-mobile-wrapper'>
-        <ProductDetailsWrapper className='product-card' dir='ltr'>
+      </ModalClose>
+      <QuickViewWrapper>
+        <ProductDetailsWrapper className="product-card" dir="ltr">
           {!isRtl && (
             <ProductPreview>
               <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
               {!!discountInPercent && (
-                <DiscountPercent>{discountInPercent}%</DiscountPercent>
+                <>
+                  <DiscountPercent>{discountInPercent}%</DiscountPercent>
+                </>
               )}
             </ProductPreview>
           )}
@@ -99,12 +100,54 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
             <ProductInfo>
               <ProductTitlePriceWrapper>
                 <ProductTitle>{title}</ProductTitle>
+                <ProductPriceWrapper>
+                  {discountInPercent ? (
+                    <SalePrice>
+                      {CURRENCY}
+                      {price}
+                    </SalePrice>
+                  ) : (
+                    ''
+                  )}
+
+                  <ProductPrice>
+                    {CURRENCY}
+                    {salePrice ? salePrice : price}
+                  </ProductPrice>
+                </ProductPriceWrapper>
               </ProductTitlePriceWrapper>
 
               <ProductWeight>{unit}</ProductWeight>
               <ProductDescription>
                 <ReadMore character={600}>{description}</ReadMore>
               </ProductDescription>
+
+              <ProductCartWrapper>
+                <ProductCartBtn>
+                  {!isInCart(id) ? (
+                    <Button
+                      className="cart-button"
+                      variant="secondary"
+                      borderRadius={100}
+                      onClick={handleAddClick}
+                    >
+                      <CartIcon mr={2} />
+                      <ButtonText>
+                        <FormattedMessage
+                          id="addCartButton"
+                          defaultMessage="Cart"
+                        />
+                      </ButtonText>
+                    </Button>
+                  ) : (
+                    <Counter
+                      value={getItem(id).quantity}
+                      onDecrement={handleRemoveClick}
+                      onIncrement={handleAddClick}
+                    />
+                  )}
+                </ProductCartBtn>
+              </ProductCartWrapper>
 
               <ProductMeta>
                 <MetaSingle>
@@ -120,47 +163,6 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
                     : ''}
                 </MetaSingle>
               </ProductMeta>
-
-              <ProductCartWrapper>
-                <ProductPriceWrapper>
-                  <ProductPrice>
-                    {CURRENCY}
-                    {salePrice ? salePrice : price}
-                  </ProductPrice>
-
-                  {discountInPercent ? (
-                    <SalePrice>
-                      {CURRENCY}
-                      {price}
-                    </SalePrice>
-                  ) : null}
-                </ProductPriceWrapper>
-
-                <ProductCartBtn>
-                  {!isInCart(id) ? (
-                    <Button
-                      className='cart-button'
-                      variant='secondary'
-                      borderRadius={100}
-                      onClick={handleAddClick}
-                    >
-                      <CartIcon mr={2} />
-                      <ButtonText>
-                        <FormattedMessage
-                          id='addCartButton'
-                          defaultMessage='Cart'
-                        />
-                      </ButtonText>
-                    </Button>
-                  ) : (
-                    <Counter
-                      value={getItem(id).quantity}
-                      onDecrement={handleRemoveClick}
-                      onIncrement={handleAddClick}
-                    />
-                  )}
-                </ProductCartBtn>
-              </ProductCartWrapper>
             </ProductInfo>
           </ProductInfoWrapper>
 
@@ -168,7 +170,9 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
             <ProductPreview>
               <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
               {!!discountInPercent && (
-                <DiscountPercent>{discountInPercent}%</DiscountPercent>
+                <>
+                  <DiscountPercent>{discountInPercent}%</DiscountPercent>
+                </>
               )}
             </ProductPreview>
           )}
@@ -178,4 +182,4 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
   );
 };
 
-export default QuickViewMobile;
+export default QuickView;

@@ -38,20 +38,27 @@ import { useCart } from 'contexts/cart/use-cart';
 import { PlusOutline } from 'assets/icons/plus-outline-icon';
 import { Minus } from 'assets/icons/plus-minus-icon';
 import { useMedia } from 'utils/use-media';
+import dynamic from 'next/dynamic';
+import { useModal } from 'contexts/modal/use-modal';
+import { useRouter } from 'next/router';
 
+const QuickViewMobile = dynamic(
+  () => import('features/quick-view/quick-view-mobile')
+);
 type ProductDetailsProps = {
   product: any;
-  // deviceType: {
-  //   mobile: boolean;
-  //   tablet: boolean;
-  //   desktop: boolean;
-  // };
+  deviceType: {
+    mobile: boolean;
+    tablet: boolean;
+    desktop: boolean;
+  };
 };
 
 const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   product,
-  // deviceType,
+  deviceType,
 }) => {
+  const router = useRouter();
   const tablet = useMedia('(max-width: 991px)');
   const { addItem, clearCart, toggleRestaurant, isInCart } = useCart();
   const handleAddClick = (values) => {
@@ -71,6 +78,57 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   const productGroups = groupBy(data?.products, 'type');
 
   const headerOffset = tablet ? -137 : -177;
+
+  const [showModal, hideModal] = useModal(
+    () => (
+      <QuickViewMobile
+        modalProps={data}
+        hideModal={hideModal}
+        deviceType={deviceType}
+      />
+    ),
+    {
+      onClose: () => {
+        const { pathname, query, asPath } = router;
+        const as = asPath;
+        router.push(
+          {
+            pathname,
+            query,
+          },
+          as,
+          {
+            shallow: true,
+          }
+        );
+      },
+    }
+  );
+
+  const handleQuickViewModal = () => {
+    const { pathname, query } = router;
+    const as = `/product/${data.slug}`;
+    if (pathname === '/product/[slug]') {
+      router.push(pathname, as);
+      if (typeof window !== 'undefined') {
+        window.scrollTo(0, 0);
+      }
+      return;
+    }
+    showModal();
+    router.push(
+      {
+        pathname,
+        query,
+      },
+      {
+        pathname: as,
+      },
+      {
+        shallow: true,
+      }
+    );
+  };
 
   return (
     <>
@@ -149,9 +207,10 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
                 {items.map((item) => (
                   <ItemWrapper key={item.id}>
-                    <ItemNameDetails>
+                    <ItemNameDetails onClick={handleQuickViewModal}>
                       <ItemName>{item.name}</ItemName>
                       <ItemDetails>{item.description}</ItemDetails>
+                      <ItemDetails>Addons: {item.addons && item.addons.map(m => m.name).join(',')}</ItemDetails>
                     </ItemNameDetails>
 
                     <Button
