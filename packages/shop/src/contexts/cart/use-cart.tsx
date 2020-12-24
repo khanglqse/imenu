@@ -16,6 +16,10 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
     dispatch({ type: 'ADD_ITEM', payload: { ...item, quantity } });
   };
 
+  const updateAddonHandler = (item, quantity = 1) => {
+    dispatch({ type: 'ADD_ITEM', payload: { ...item, quantity } });
+  };
+
   const removeItemHandler = (item, quantity = 1) => {
     dispatch({ type: 'REMOVE_ITEM', payload: { ...item, quantity } });
   };
@@ -68,6 +72,7 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
     getItemsCount,
     rehydrateLocalState,
     addItemHandler,
+    updateAddonHandler,
     removeItemHandler,
     clearItemFromCartHandler,
     clearCartHandler,
@@ -89,6 +94,7 @@ export const CartProvider = ({ children }) => {
     rehydrateLocalState,
     getItemsCount,
     addItemHandler,
+    updateAddonHandler,
     removeItemHandler,
     clearItemFromCartHandler,
     clearCartHandler,
@@ -114,6 +120,7 @@ export const CartProvider = ({ children }) => {
         cartItemsCount: state.items?.length,
         itemsCount: getItemsCount,
         addItem: addItemHandler,
+        updateAddon: updateAddonHandler,
         removeItem: removeItemHandler,
         removeItemFromCart: clearItemFromCartHandler,
         clearCart: clearCartHandler,

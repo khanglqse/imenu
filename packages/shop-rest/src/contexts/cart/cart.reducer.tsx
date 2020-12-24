@@ -29,6 +29,22 @@ const addItemToCart = (state, action) => {
   return [...state.items, action.payload];
 };
 
+const updateAddonToCart = (state, action) => {
+  return [...state.items.map(m => {
+    if (m.id === action.payload.product.id) {
+      return m.addon.map(addon => {
+        if (addon.id === action.payload.addon.id) {
+          return {...addon, quantity: action.payload.addon.quantity}
+        } else {
+          return addon
+        }
+      })
+    } else {
+      return m
+    }
+  })]
+}
+
 // cartItems, cartItemToRemove
 const removeItemFromCart = (state, action) => {
   return state.items.reduce((acc, item) => {
@@ -55,6 +71,8 @@ export const reducer = (state, action) => {
       return { ...state, isOpen: !state.isOpen };
     case 'ADD_ITEM':
       return { ...state, items: addItemToCart(state, action) };
+    case 'UPDATE_ADDON':
+      return { ...state, items: updateAddonToCart(state, action) };
     case 'REMOVE_ITEM':
       return { ...state, items: removeItemFromCart(state, action) };
     case 'CLEAR_ITEM_FROM_CART':
