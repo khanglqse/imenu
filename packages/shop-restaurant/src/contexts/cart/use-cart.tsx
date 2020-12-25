@@ -15,6 +15,10 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
   const addItemHandler = (item, quantity = 1) => {
     dispatch({ type: 'ADD_ITEM', payload: { ...item, quantity } });
   };
+  const updateAddonHandler = (productId, addonId, quantity) => {
+    dispatch({ type: 'UPDATE_ADDON', payload: { productId, addonId, quantity } });
+  };
+  
 
   const removeItemHandler = (item, quantity = 1) => {
     dispatch({ type: 'REMOVE_ITEM', payload: { ...item, quantity } });
@@ -48,6 +52,13 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
   const getItemHandler = (id) => {
     return state.items?.find((item) => item.id === id);
   };
+
+  const getAddonHandler = (productId, addonId) => {
+    const product = state.items?.find((item) => item.id === productId);
+    
+    return product ? product.addons?.find(m => m.id === addonId) : {}
+  };
+
   const getCartItemsPrice = () => cartItemsTotalPrice(state.items).toFixed(2);
   const getCartItemsTotalPrice = () =>
     cartItemsTotalPrice(state.items, state.coupon).toFixed(2);
@@ -73,6 +84,7 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
     clearCartHandler,
     isInCartHandler,
     getItemHandler,
+    getAddonHandler,
     toggleCartHandler,
     getCartItemsTotalPrice,
     getCartItemsPrice,
@@ -80,6 +92,7 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
     removeCouponHandler,
     getDiscount,
     toggleRestaurant,
+    updateAddonHandler,
   };
 };
 
@@ -88,11 +101,13 @@ export const CartProvider = ({ children }) => {
     state,
     rehydrateLocalState,
     getItemsCount,
+    getAddonHandler,
     addItemHandler,
     removeItemHandler,
     clearItemFromCartHandler,
     clearCartHandler,
     isInCartHandler,
+    updateAddonHandler,
     getItemHandler,
     toggleCartHandler,
     getCartItemsTotalPrice,
@@ -113,9 +128,11 @@ export const CartProvider = ({ children }) => {
         isRestaurant: state.isRestaurant,
         cartItemsCount: state.items?.length,
         itemsCount: getItemsCount,
+        getAddon: getAddonHandler,
         addItem: addItemHandler,
         removeItem: removeItemHandler,
         removeItemFromCart: clearItemFromCartHandler,
+        updateAddon: updateAddonHandler,
         clearCart: clearCartHandler,
         isInCart: isInCartHandler,
         getItem: getItemHandler,

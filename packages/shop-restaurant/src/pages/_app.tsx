@@ -20,9 +20,14 @@ import 'components/scrollbar/scrollbar.css';
 import '@redq/reuse-modal/lib/index.css';
 import 'typeface-lato';
 import 'typeface-poppins';
+import { useMedia } from 'utils/use-media';
 const AppLayout = dynamic(() => import('layouts/app-layout'));
 
+
 export default function CustomApp({ Component, pageProps }: AppProps) {
+  const mobile = useMedia('(max-width: 580px)');
+  const tablet = useMedia('(max-width: 991px)');
+  const desktop = useMedia('(min-width: 992px)');
   const apolloClient = useApollo(pageProps.initialApolloState);
   return (
     <ApolloProvider client={apolloClient}>
@@ -33,7 +38,7 @@ export default function CustomApp({ Component, pageProps }: AppProps) {
             <LanguageProvider messages={messages}>
               <AuthProvider>
                 <AppLayout>
-                  <Component {...pageProps} />
+                  <Component {...pageProps} deviceType={{ mobile, tablet, desktop }}/>
                 </AppLayout>
               </AuthProvider>
             </LanguageProvider>

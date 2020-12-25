@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Element } from 'react-scroll';
 import { Button } from 'components/button/button';
 import {
@@ -41,6 +41,8 @@ import { useMedia } from 'utils/use-media';
 import dynamic from 'next/dynamic';
 import { useModal } from 'contexts/modal/use-modal';
 import { useRouter } from 'next/router';
+import { ModalProvider } from 'contexts/modal/modal.provider';
+import ProductDetailItem from './product-details-item';
 
 const QuickViewMobile = dynamic(
   () => import('features/quick-view/quick-view-mobile')
@@ -58,6 +60,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   product,
   deviceType,
 }) => {
+  const [currentItem, setCurrentItem] = useState({})
   const router = useRouter();
   const tablet = useMedia('(max-width: 991px)');
   const { addItem, clearCart, toggleRestaurant, isInCart } = useCart();
@@ -82,7 +85,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   const [showModal, hideModal] = useModal(
     () => (
       <QuickViewMobile
-        modalProps={data}
+        modalProps={currentItem}
         hideModal={hideModal}
         deviceType={deviceType}
       />
@@ -105,33 +108,10 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     }
   );
 
-  const handleQuickViewModal = () => {
-    const { pathname, query } = router;
-    const as = `/product/${data.slug}`;
-    if (pathname === '/product/[slug]') {
-      router.push(pathname, as);
-      if (typeof window !== 'undefined') {
-        window.scrollTo(0, 0);
-      }
-      return;
-    }
-    showModal();
-    router.push(
-      {
-        pathname,
-        query,
-      },
-      {
-        pathname: as,
-      },
-      {
-        shallow: true,
-      }
-    );
-  };
+
 
   return (
-    <>
+    <ModalProvider>
       <ProductDetailsWrapper>
         <ProductPreview>
           <img src={data.previewUrl} alt={data.name} />
@@ -204,44 +184,8 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                     {Object.keys(productGroups)[idx]}
                   </ItemCategoryName>
                 </ItemCategoryWrapper>
-
                 {items.map((item) => (
-                  <ItemWrapper key={item.id}>
-                    <ItemNameDetails onClick={handleQuickViewModal}>
-                      <ItemName>{item.name}</ItemName>
-                      <ItemDetails>{item.description}</ItemDetails>
-                      <ItemDetails>Addons: {item.addons && item.addons.map(m => m.name).join(',')}</ItemDetails>
-                    </ItemNameDetails>
-
-                    <Button
-                      variant='select'
-                      type='button'
-                      className={isInCart(item.id) ? 'selected' : ''}
-                      onClick={() => handleAddClick(item)}
-                    >
-                      <Minus width='14px' height='14px' />
-                    </Button>
-
-                    <ItemNamePricing>
-                      <HelpText>
-                        <FormattedMessage id='fromText' defaultMessage='From' />
-                        &nbsp;
-                      </HelpText>
-                      <ItemPrice>
-                        {siteConstant.CURRENCY}
-                        {item.price}
-                      </ItemPrice>
-                    </ItemNamePricing>
-
-                    <Button
-                      variant='select'
-                      type='button'
-                      className={isInCart(item.id) ? 'selected' : ''}
-                      onClick={() => handleAddClick(item)}
-                    >
-                      <PlusOutline width='14px' height='14px' />
-                    </Button>
-                  </ItemWrapper>
+                  <ProductDetailItem key={item.id} product={item} deviceType={deviceType} />
                 ))}
               </Element>
             ))}
@@ -271,7 +215,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
           />
         </MainContent>
       </ProductDetailsWrapper>
-    </>
+    </ModalProvider>
   );
 };
 

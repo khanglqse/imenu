@@ -7,8 +7,17 @@ import { GET_VENDOR } from 'utils/graphql/query/vendor.query';
 import { SEO } from 'components/seo';
 import ErrorMessage from 'components/error-message/error-message';
 import { Box } from 'components/box';
+import { ModalProvider } from 'contexts/modal/modal.provider';
 
-const ProductPage: NextPage = () => {
+type Props = {
+  deviceType?: {
+    mobile: boolean;
+    tablet: boolean;
+    desktop: boolean;
+  };
+};
+
+const ProductPage: NextPage<Props> = ({deviceType}) => {
   const {
     query: { slug },
   } = useRouter();
@@ -50,7 +59,7 @@ const ProductPage: NextPage = () => {
             id: '1',
             name: 'khang',
             price: 5,
-            
+            quantity: 0,
           }
         ]
       },
@@ -98,11 +107,13 @@ const ProductPage: NextPage = () => {
         title={`${data?.vendor?.name} - PickBazar`}
         description={`${data?.vendor?.name} Details`}
       />
-      <Modal>
-        <Box position="relative" bg="gray.200" pt={[60, 89, 78]} pb={60}>
-          <ProductDetailsFood product={data?.vendor} />
-        </Box>
-      </Modal>
+      <ModalProvider>
+        <Modal>
+          <Box position="relative" bg="gray.200" pt={[60, 89, 78]} pb={60}>
+            <ProductDetailsFood product={data?.vendor} deviceType={deviceType} />
+          </Box>
+        </Modal>
+      </ModalProvider>
     </>
   );
 };

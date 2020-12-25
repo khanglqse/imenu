@@ -76,6 +76,9 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
       margin: 0,
       padding: 0,
     },
+    disabled: {
+      backgroundColor: 'grey',
+    },
     li: {
       listStyle: 'none',
     },

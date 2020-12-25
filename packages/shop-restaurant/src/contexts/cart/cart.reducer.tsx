@@ -29,6 +29,26 @@ const addItemToCart = (state, action) => {
   return [...state.items, action.payload];
 };
 
+const updateAddonToCart = (state, action) => {
+
+  const a=  [...state.items.map(m => {
+    if (m.id === action.payload.productId) {
+      return {...m, addons: m.addons.map(addon => {
+        if (addon.id === action.payload.addonId) {
+          console.log('update addon', action.payload.quantity)
+          return {...addon, quantity: action.payload.quantity}
+        } else {
+          console.log('noio change')
+          return addon
+        }
+      })
+    }} else {
+      return m
+    }
+  })]
+  return a
+}
+
 // cartItems, cartItemToRemove
 const removeItemFromCart = (state, action) => {
   return state.items.reduce((acc, item) => {
@@ -53,6 +73,8 @@ export const reducer = (state, action) => {
       return { ...state, ...action.payload };
     case 'TOGGLE_CART':
       return { ...state, isOpen: !state.isOpen };
+    case 'UPDATE_ADDON':
+      return { ...state, items: updateAddonToCart(state, action) };
     case 'ADD_ITEM':
       return { ...state, items: addItemToCart(state, action) };
     case 'REMOVE_ITEM':

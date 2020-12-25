@@ -57,7 +57,8 @@ export const ModalProvider = ({
       onClose();
     }
   }, []);
-  const contextValue = useMemo<any>(() => ({ showModal, hideModal }), []);
+  const contextValue: any = { showModal, hideModal }
+  
   const isSmall = useMedia('(max-width: 991px)');
   return (
     <ModalContext.Provider value={contextValue}>

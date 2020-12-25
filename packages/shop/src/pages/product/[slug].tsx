@@ -46,7 +46,7 @@ const ProductPage: NextPage<Props> = ({ data, deviceType }) => {
         title={`${data.product.title} - PickBazar`}
         description={`${data.product.title} Details`}
       />
-
+      
       <Modal>
         <ProductSingleWrapper>
           <ProductSingleContainer>

@@ -22,7 +22,9 @@ import {
   ProductCartBtn,
   MetaSingle,
   MetaItem,
+  PriceContainer,
   ModalClose,
+  StyledCounter,
 } from './quick-view.style';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { CartIcon } from 'assets/icons/CartIcon';
@@ -31,7 +33,6 @@ import ReadMore from 'components/truncate/truncate';
 import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
 import { useLocale } from 'contexts/language/language.provider';
 import { useCart } from 'contexts/cart/use-cart';
-import { Counter } from 'components/counter/counter';
 import { FormattedMessage } from 'react-intl';
 const CURRENCY = '$'
 type QuickViewProps = {
@@ -47,11 +48,11 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
   hideModal,
   deviceType,
 }) => {
-  const { addItem, removeItem, isInCart, getItem } = useCart();
+  const { addItem, removeItem, isInCart, getItem, getAddon, updateAddon } = useCart();
   const {
     id,
     type,
-    title,
+    name,
     unit,
     price,
     discountInPercent,
@@ -59,8 +60,9 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
     description,
     gallery,
     categories,
+    addons
   } = modalProps;
-
+  console.log(modalProps)
   const { isRtl } = useLocale();
 
   const handleAddClick = (e: any) => {
@@ -78,6 +80,9 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
       query: { category: slug },
     }).then(() => window.scrollTo(0, 0));
     hideModal();
+  }
+  const handleAddOn = (a,b,c) => {
+    updateAddon(a,b,c)
   }
 
   return (
@@ -98,7 +103,7 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
           <ProductInfoWrapper dir={isRtl ? 'rtl' : 'ltr'}>
             <ProductInfo>
               <ProductTitlePriceWrapper>
-                <ProductTitle>{title}</ProductTitle>
+                <ProductTitle>{name}</ProductTitle>
               </ProductTitlePriceWrapper>
 
               <ProductWeight>{unit}</ProductWeight>
@@ -122,45 +127,98 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
               </ProductMeta>
 
               <ProductCartWrapper>
-                <ProductPriceWrapper>
-                  <ProductPrice>
-                    {CURRENCY}
-                    {salePrice ? salePrice : price}
-                  </ProductPrice>
+                <ProductDescription>
+                  {name}
+                </ProductDescription>
+                <PriceContainer>
+                  
 
-                  {discountInPercent ? (
-                    <SalePrice>
+                  <ProductCartBtn>
+                    {!isInCart(id) ? (
+                      <Button
+                        className='cart-button'
+                        variant='secondary'
+                        borderRadius={100}
+                        onClick={handleAddClick}
+                      >
+                        <CartIcon mr={2} />
+                        <ButtonText>
+                          <FormattedMessage
+                            id='addCartButton'
+                            defaultMessage='Cart'
+                          />
+                        </ButtonText>
+                      </Button>
+                    ) : (
+                      <StyledCounter
+                        value={getItem(id).quantity}
+                        onDecrement={handleRemoveClick}
+                        onIncrement={handleAddClick}
+                      />
+                    )}
+                  </ProductCartBtn>
+                  <ProductPriceWrapper>
+                    <ProductPrice>
                       {CURRENCY}
-                      {price}
-                    </SalePrice>
-                  ) : null}
-                </ProductPriceWrapper>
+                      {salePrice ? salePrice : price}
+                    </ProductPrice>
 
-                <ProductCartBtn>
-                  {!isInCart(id) ? (
-                    <Button
-                      className='cart-button'
-                      variant='secondary'
-                      borderRadius={100}
-                      onClick={handleAddClick}
-                    >
-                      <CartIcon mr={2} />
-                      <ButtonText>
-                        <FormattedMessage
-                          id='addCartButton'
-                          defaultMessage='Cart'
-                        />
-                      </ButtonText>
-                    </Button>
-                  ) : (
-                    <Counter
-                      value={getItem(id).quantity}
-                      onDecrement={handleRemoveClick}
-                      onIncrement={handleAddClick}
-                    />
-                  )}
-                </ProductCartBtn>
+                    {discountInPercent ? (
+                      <SalePrice>
+                        {CURRENCY}
+                        {price}
+                      </SalePrice>
+                    ) : null}
+                  </ProductPriceWrapper>
+                </PriceContainer>
               </ProductCartWrapper>
+              {addons && addons.length && (
+                <React.Fragment>
+                  <ProductDescription>
+                    Addons:
+                  </ProductDescription>
+                  
+                  {addons.map(addon => (
+                    <ProductCartWrapper>
+                      <p>
+                        {addon.name}
+                      </p>
+                      <PriceContainer>
+                        
+
+                        <ProductCartBtn>
+                          <StyledCounter
+                            className={!isInCart(id) && 'disabled'}
+                            value={getAddon(id, addon.id).quantity || 0}
+                            onIncrement={() => handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) + 1)}
+                            onDecrement={() => {
+                              if(addon.quantity === 0 ){
+                                return;
+                              } else {
+                                handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) + 1)
+                              }
+                            }}
+                          />
+                        </ProductCartBtn>
+                        <ProductPriceWrapper>
+                          <ProductPrice>
+                            {CURRENCY}
+                            {addon.salePrice ? addon.salePrice : addon.price}
+                          </ProductPrice>
+
+                          {discountInPercent ? (
+                            <SalePrice>
+                              {CURRENCY}
+                              {addon.price}
+                            </SalePrice>
+                          ) : null}
+                        </ProductPriceWrapper>
+                      </PriceContainer>
+                    </ProductCartWrapper>
+                  ))}
+                </React.Fragment>
+              )}
+              
             </ProductInfo>
           </ProductInfoWrapper>
 

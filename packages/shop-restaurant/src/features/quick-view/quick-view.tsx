@@ -26,7 +26,6 @@ import {
 } from './quick-view.style';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { CartIcon } from 'assets/icons/CartIcon';
-import { CURRENCY } from 'utils/constant';
 
 import ReadMore from 'components/truncate/truncate';
 import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
@@ -34,7 +33,7 @@ import { useLocale } from 'contexts/language/language.provider';
 import { useCart } from 'contexts/cart/use-cart';
 import { Counter } from 'components/counter/counter';
 import { FormattedMessage } from 'react-intl';
-
+const CURRENCY = '$'
 type QuickViewProps = {
   modalProps: any;
   deviceType: any;

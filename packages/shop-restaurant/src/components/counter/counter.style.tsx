@@ -18,6 +18,9 @@ export const CounterBox = styled.div<any>(
     '&:focus': {
       outline: 'none',
     },
+    '&.disabled': {
+      backgroundColor: 'grey',
+    }
   },
   variant({
     variants: {

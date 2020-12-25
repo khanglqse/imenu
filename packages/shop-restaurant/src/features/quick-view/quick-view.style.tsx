@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Counter } from 'components/counter/counter';
 import { themeGet } from '@styled-system/theme-get';
 
 export const ProductDetailsWrapper = styled.div`
@@ -178,9 +179,12 @@ export const ProductDescription = styled.p`
   font-weight: ${themeGet('fontWeights.regular', '400')};
   color: ${themeGet('colors.text.medium', '#424561')};
   line-height: 2;
-  margin-top: 30px;
+  // margin-top: 30px;
 `;
 
+export const StyledCounter = styled(Counter)`
+  width: 80px;
+` 
 export const ProductCartBtn = styled.div`
   margin-top: 60px;
 
@@ -250,6 +254,16 @@ export const MetaItem = styled.span`
   justify-content: center;
 `;
 
+export const PriceContainer = styled.div`
+  flex-basis: 20%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  > * {
+    margin-left: 12px !important;
+  }
+`
+
 export const ModalClose = styled.button`
   position: fixed;
   top: 20px;
@@ -284,17 +298,18 @@ export const QuickViewWrapper = styled.div`
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      align-items: center;
       margin-top: 30px;
       margin-bottom: 15px;
     }
 
-    ${SalePrice} {
-      font-size: ${themeGet('fontSizes.base', '15')}px;
-    }
+    // ${SalePrice} {
+    //   font-size: ${themeGet('fontSizes.base', '15')}px;
+    // }
 
-    ${ProductPrice} {
-      font-size: ${themeGet('fontSizes.lg', '21')}px;
-    }
+    // ${ProductPrice} {
+    //   font-size: ${themeGet('fontSizes.lg', '21')}px;
+    // }
 
     ${ProductCartBtn} {
       margin-top: 0px;
@@ -305,7 +320,7 @@ export const QuickViewWrapper = styled.div`
     }
 
     ${ProductPrice} {
-      font-size: ${themeGet('fontSizes.lg', '21')}px;
+      // font-size: ${themeGet('fontSizes.lg', '21')}px;
     }
 
     ${ProductPriceWrapper} {
