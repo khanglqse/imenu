@@ -109,6 +109,9 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
     img: {
       maxWidth: '100%',
     },
+    '.w-normal': {
+      'font-weight': 'normal'
+    },
     '.quick-view-overlay': {
       backgroundColor: 'rgba(0,0,0,.5)',
     },

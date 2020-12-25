@@ -112,18 +112,7 @@ const ProductDetailItem: React.FunctionComponent<ProductDetailItemProps> = ({
     const as = `/${data.slug}/{item}`;
 
     showModal();
-    // router.push(
-    //   {
-    //     pathname,
-    //     query,
-    //   },
-    //   {
-    //     pathname: as,
-    //   },
-    //   {
-    //     shallow: true,
-    //   }
-    // );
+ 
   };
 
   return (

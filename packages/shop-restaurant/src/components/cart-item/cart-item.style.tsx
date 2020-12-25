@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import css from '@styled-system/css';
+import { justifyContent } from 'styled-system';
 export const ItemBox = styled.div(
   css({
     fontSize: 'base',
@@ -8,6 +9,7 @@ export const ItemBox = styled.div(
     px: 25,
     borderBottom: `1px solid`,
     borderBottomColor: 'gray.200',
+    justifyContent: 'space-between',
   }),
   {
     display: 'flex',
@@ -33,6 +35,19 @@ export const Name = styled.span(
     lineHeight: 1.5,
   })
 );
+export const GroupItem = styled.div(
+  css({
+    display: 'flex',
+    flexDirection: 'column',
+    'flex-basis': '80%',
+  })
+)
+export const ItemContainer = styled.div(
+  css({
+    display: 'flex',
+    justifyContent: 'space-between'
+  })
+)
 export const Price = styled.span(
   css({
     color: 'primary.regular',

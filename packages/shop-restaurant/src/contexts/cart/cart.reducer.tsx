@@ -1,11 +1,19 @@
 // export const cartItemsTotalPrice = (items, { discountInPercent = 0 } = {}) => {
 export const cartItemsTotalPrice = (items, coupon = null) => {
   if (items === null || items.length === 0) return 0;
-  const itemCost = items.reduce((total, item) => {
+  let itemCost = items.reduce((total, item) => {
     if (item.salePrice) {
-      return total + item.salePrice * item.quantity;
+      const addonPrice = item.addons?.reduce((price, addon) => {
+        return price + addon.price * (addon.quantity || 0)
+      }, 0);
+      return total + addonPrice + item.salePrice * item.quantity;
     }
-    return total + item.price * item.quantity;
+    console.log(item.addons)
+
+    const addonPrice = item.addons?.reduce((price, addon) => {
+      return price + addon.price * (addon.quantity || 0)
+    }, 0);
+    return total + addonPrice + item.price * item.quantity;
   }, 0);
   // const discountRate = 1 - discountInPercent;
   const discount = coupon
