@@ -63,9 +63,12 @@ const ProductDetailItem: React.FunctionComponent<ProductDetailItemProps> = ({
   const [currentItem, setCurrentItem] = useState({})
   const router = useRouter();
   const tablet = useMedia('(max-width: 991px)');
-  const { addItem, clearCart, toggleRestaurant, isInCart } = useCart();
+  const { addItem, clearCart, toggleRestaurant, isInCart, removeItem } = useCart();
   const handleAddClick = (values) => {
     addItem(values);
+  };
+  const handleRemoveClick = (values) => {
+    removeItem(values);
   };
   const checkoutStatus = React.useRef(null);
   const data = product;
@@ -133,7 +136,7 @@ const ProductDetailItem: React.FunctionComponent<ProductDetailItemProps> = ({
         variant='select'
         type='button'
         className={isInCart(product.id) ? 'selected' : ''}
-        onClick={() => handleAddClick(product)}
+        onClick={() => handleRemoveClick(product)}
       >
         <Minus width='14px' height='14px' />
       </Button>
