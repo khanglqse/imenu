@@ -123,7 +123,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
               <RestaurantAddress>{data.address}</RestaurantAddress>
             </RestaurantNameAddress>
 
-            <RestaurantOtherInfos>
+            {/* <RestaurantOtherInfos>
               <InfoBlock>
                 <Label>
                   <FormattedMessage id='cuisineText' defaultMessage='Cuisine' />
@@ -150,7 +150,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                 <br />{' '}
                 <FormattedMessage id='deliveryText' defaultMessage='Delivery' />
               </DeliveryOpt>
-            </RestaurantOtherInfos>
+            </RestaurantOtherInfos> */}
           </RestaurantMeta>
 
           <Sticky top={tablet ? 68 : 78} innerZ={999}>

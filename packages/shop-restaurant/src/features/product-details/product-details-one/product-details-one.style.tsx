@@ -352,3 +352,8 @@ export const ItemPrice = styled.span`
   font-weight: ${themeGet('fontWeights.bold', '700')};
   color: ${themeGet('colors.blue.dark', '#161F6A')};
 `;
+export const PreviewProduct = styled.img`
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+`

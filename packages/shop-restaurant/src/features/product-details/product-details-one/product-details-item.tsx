@@ -26,6 +26,7 @@ import {
   ItemNamePricing,
   HelpText,
   ItemPrice,
+  PreviewProduct,
   CartWrapper,
 } from './product-details-one.style';
 import { siteConstant } from 'site-settings/site-constant';
@@ -115,8 +116,13 @@ const ProductDetailItem: React.FunctionComponent<ProductDetailItemProps> = ({
  
   };
 
+  const getPreviewImage = () => {
+    return product.image_url ? `https://izmenu.com/${product.image_url}`: 'https://i0.wp.com/danongonline.com.vn/wp-content/uploads/2018/02/anh-girl-xinh-9-1.jpg?fit=624%2C563&ssl=1'
+  }
+
   return (
     <ItemWrapper key={product.id}>
+      <PreviewProduct src={getPreviewImage()} alt={product.name} />
       <ItemNameDetails onClick={() => handleQuickViewModal()}>
         <ItemName>{product.name}</ItemName>
         <ItemDetails>{product.description}</ItemDetails>
