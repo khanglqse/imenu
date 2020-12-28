@@ -122,11 +122,11 @@ const ProductDetailItem: React.FunctionComponent<ProductDetailItemProps> = ({
 
   return (
     <ItemWrapper key={product.id}>
-      <PreviewProduct src={getPreviewImage()} alt={product.name} />
+      <PreviewProduct onClick={() => handleQuickViewModal()} src={getPreviewImage()} alt={product.name} />
       <ItemNameDetails onClick={() => handleQuickViewModal()}>
         <ItemName>{product.name}</ItemName>
         <ItemDetails>{product.description}</ItemDetails>
-        <ItemDetails>Addons: {product.addons && product.addons.map(m => m.name).join(',')}</ItemDetails>
+        <ItemDetails>Addons: {product.addons && product.addons.map(m => m.name).join(', ')}</ItemDetails>
       </ItemNameDetails>
 
       <Button

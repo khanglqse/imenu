@@ -85,7 +85,7 @@ export const TextCartItem: React.FC<Props> = ({
             <p className='w-normal'>{addon.name}</p>
             <Total>
               {siteConstant.CURRENCY}
-              {(addon.quantity * price).toFixed(2)}
+              {((addon.quantity * addon.price) || 0).toFixed(2)}
             </Total>
             <RemoveButton onClick={() =>updateAddon(id, addon.id, 0)}>
               <CloseIcon />

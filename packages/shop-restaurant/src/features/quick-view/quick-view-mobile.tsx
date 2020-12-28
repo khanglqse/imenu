@@ -84,7 +84,9 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
   const handleAddOn = (a,b,c) => {
     updateAddon(a,b,c)
   }
-
+  const getPreviewImage = () => {
+    return modalProps.image_url ? `https://izmenu.com/${modalProps.image_url}`: 'https://i0.wp.com/danongonline.com.vn/wp-content/uploads/2018/02/anh-girl-xinh-9-1.jpg?fit=624%2C563&ssl=1'
+  }
   return (
     <>
       {/* <ModalClose onClick={onModalClose}>
@@ -94,10 +96,11 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
         <ProductDetailsWrapper className='product-card' dir='ltr'>
           {!isRtl && (
             <ProductPreview>
-              <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
+              <img src={getPreviewImage()}/>
+              {/* <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
               {!!discountInPercent && (
                 <DiscountPercent>{discountInPercent}%</DiscountPercent>
-              )}
+              )} */}
             </ProductPreview>
           )}
           <ProductInfoWrapper dir={isRtl ? 'rtl' : 'ltr'}>
@@ -195,7 +198,7 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
                               if(addon.quantity === 0 ){
                                 return;
                               } else {
-                                handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) + 1)
+                                handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) - 1)
                               }
                             }}
                           />

@@ -114,7 +114,7 @@ const ProductPage: NextPage<Props> = ({deviceType}) => {
         products: vendorInfo.products.map(m => (
           {...m,
           type: vendorInfo.categories.find((cat) => cat.id === m.category_id).name,
-          addons: res.addon_items
+          addons: processAddons(m.addon_items)
           }
         ))
       }}
@@ -126,6 +126,17 @@ const ProductPage: NextPage<Props> = ({deviceType}) => {
    
   }
   
+  const processAddons = (addonItems) => {
+    let result = []
+    addonItems.forEach(addonItem => {
+      const category = addonItem.categories[0];
+      result = result.concat(category.addons.map(m => ({...m, typeId: category.id, type: category.type, name: m.addon_name})))
+    });
+    console.log(result)
+    return result
+  }
+
+
   if (loading) {
     return <div>loading...</div>;
   }
