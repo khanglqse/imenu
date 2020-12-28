@@ -48,6 +48,19 @@ export const ItemContainer = styled.div(
     justifyContent: 'space-between'
   })
 )
+export const ItemCount = styled.div(
+  css({
+    fontSize: '0.8em',
+    marginLeft: '8px'
+  })
+)
+export const Title = styled.div(
+  css({
+    display: 'flex',
+    alignItems: 'flex-end'
+  })
+)
+
 export const Price = styled.span(
   css({
     color: 'primary.regular',

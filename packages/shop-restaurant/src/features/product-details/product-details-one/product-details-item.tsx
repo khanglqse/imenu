@@ -129,7 +129,7 @@ const ProductDetailItem: React.FunctionComponent<ProductDetailItemProps> = ({
       <ItemNameDetails onClick={() => handleQuickViewModal()}>
         <ItemName>{product.name}</ItemName>
         <ItemDetails>{product.description}</ItemDetails>
-        <ItemDetails>Addons: {product.addons && product.addons.map(m => m.name).join(', ')}</ItemDetails>
+        {product.addons.length ? <ItemDetails>Addons: {product.addons && product.addons.map(m => m.name).join(', ')}</ItemDetails> : null}
       </ItemNameDetails>
 
       <Button

@@ -63,7 +63,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   const [currentItem, setCurrentItem] = useState({})
   const router = useRouter();
   const tablet = useMedia('(max-width: 991px)');
-  const { addItem, clearCart, toggleRestaurant, isInCart } = useCart();
+  const { addItem, clearCart, toggleRestaurant, isInCart, items } = useCart();
   const handleAddClick = (values) => {
     addItem(values);
   };
@@ -200,8 +200,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                   height: `calc(100vh - 193px)`,
                 }}
                 onCheckout={() => {
-                  toggleRestaurant();
-                  checkoutStatus.current = true;
+                  console.log(items)
                 }}
               />
             </Sticky>
@@ -209,8 +208,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
           <FixedCartPopup
             onCheckout={() => {
-              toggleRestaurant();
-              checkoutStatus.current = true;
+              console.log()
             }}
           />
         </MainContent>

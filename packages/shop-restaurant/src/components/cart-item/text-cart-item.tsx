@@ -13,6 +13,8 @@ import {
   GroupItem,
   ItemContainer,
   RemoveButton,
+  ItemCount,
+  Title,
 } from './cart-item.style';
 import { useCart } from 'contexts/cart/use-cart';
 import { useModal } from 'contexts/modal/use-modal';
@@ -35,7 +37,7 @@ export const TextCartItem: React.FC<Props> = ({
   onIncrement,
   onRemove,
 }) => {
-  const { name, price, salePrice, unit, quantity, addons,id } = data;
+  const { name, price, salePrice, unit, quantity, addons, id } = data;
   const displayPrice = salePrice ? salePrice : price;
   const containAddon = addons.some(m => m.quantity > 0)
   const {
@@ -44,13 +46,13 @@ export const TextCartItem: React.FC<Props> = ({
   const mobile = useMedia('(max-width: 580px)');
   const tablet = useMedia('(max-width: 991px)');
   const desktop = useMedia('(min-width: 992px)');
-  
+
   const [showModal, hideModal] = useModal(
     () => (
       <QuickViewMobile
         modalProps={data}
         hideModal={hideModal}
-        deviceType={{mobile, tablet, desktop}}
+        deviceType={{ mobile, tablet, desktop }}
       />
     ),
     {
@@ -80,18 +82,20 @@ export const TextCartItem: React.FC<Props> = ({
           </RemoveButton>
         </ItemContainer>
         {containAddon &&
-          addons && addons.map((addon) => (
-            <ItemContainer>
-            <p className='w-normal'>{addon.name}</p>
-            <Total>
-              {siteConstant.CURRENCY}
-              {((addon.quantity * addon.price) || 0).toFixed(2)}
-            </Total>
-            <RemoveButton onClick={() =>updateAddon(id, addon.id, 0)}>
-              <CloseIcon />
-            </RemoveButton>
-          </ItemContainer>
-        ))}
+          addons && addons.map((addon) => {
+            return addon.quantity > 0 && (
+              <ItemContainer>
+                <Title className='w-normal'><span></span>{addon.name} <ItemCount>x ({addon.quantity})</ItemCount></Title>
+                <Total>
+                  {siteConstant.CURRENCY}
+                  {((addon.quantity * addon.price) || 0).toFixed(2)}
+                </Total>
+                <RemoveButton onClick={() => updateAddon(id, addon.id, 0)}>
+                  <CloseIcon />
+                </RemoveButton>
+              </ItemContainer>
+            )
+          })}
       </GroupItem>
     </ItemBox>
   );

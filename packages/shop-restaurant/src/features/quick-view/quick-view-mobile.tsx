@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 // import { closeModal } from '@redq/reuse-modal';
 import { Button } from 'components/button/button';
@@ -34,6 +34,7 @@ import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
 import { useLocale } from 'contexts/language/language.provider';
 import { useCart } from 'contexts/cart/use-cart';
 import { FormattedMessage } from 'react-intl';
+import Select from 'components/select/select';
 const CURRENCY = '$'
 type QuickViewProps = {
   modalProps: any;
@@ -64,11 +65,37 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
   } = modalProps;
   console.log(modalProps)
   const { isRtl } = useLocale();
-
+  const [groupedAddon,setGroupAddon] = useState([])
   const handleAddClick = (e: any) => {
     e.stopPropagation();
     addItem(modalProps);
   };
+ 
+
+  const processAddons = () => {
+    let rs = []
+    addons.forEach(element => {
+      if(element.type !== 'SNG') {
+        rs = rs.concat(element)
+      } else {
+        const currentAddon = rs.find(m => m.typeId === element.typeId)
+        if(!currentAddon) {
+          rs.push({
+            typeId: element.typeId,
+            type: element.type,
+            childs: [element]
+          })
+        } else {
+          currentAddon.childs = currentAddon.childs.concat(element)
+        }
+      }
+    });
+    return rs
+  }
+
+  useEffect(() => {
+    setGroupAddon(processAddons())
+   }, [addons]) 
 
   const handleRemoveClick = (e: any) => {
     e.stopPropagation();
@@ -81,11 +108,19 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
     }).then(() => window.scrollTo(0, 0));
     hideModal();
   }
-  const handleAddOn = (a,b,c) => {
-    updateAddon(a,b,c)
+  const handleAddOn = (productId, addonId,quantity) => {
+    updateAddon(productId,addonId,quantity)
   }
   const getPreviewImage = () => {
     return modalProps.image_url ? `https://izmenu.com/${modalProps.image_url}`: 'https://i0.wp.com/danongonline.com.vn/wp-content/uploads/2018/02/anh-girl-xinh-9-1.jpg?fit=624%2C563&ssl=1'
+  }
+  const handleAddonChange = (addonId, childs) => {
+    updateAddon(id, addonId, 1)
+    childs.forEach(addon => {
+      if(addon.id !== addonId) {
+        updateAddon(id, addon.id, 0)
+      }
+    });
   }
   return (
     <>
@@ -175,50 +210,60 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
                   </ProductPriceWrapper>
                 </PriceContainer>
               </ProductCartWrapper>
-              {addons && addons.length && (
+              {groupedAddon && groupedAddon.length && (
                 <React.Fragment>
                   <ProductDescription>
                     Addons:
                   </ProductDescription>
                   
-                  {addons.map(addon => (
-                    <ProductCartWrapper>
-                      <p>
-                        {addon.name}
-                      </p>
-                      <PriceContainer>
-                        
-
-                        <ProductCartBtn>
-                          <StyledCounter
-                            className={!isInCart(id) && 'disabled'}
-                            value={getAddon(id, addon.id).quantity || 0}
-                            onIncrement={() => handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) + 1)}
-                            onDecrement={() => {
-                              if(addon.quantity === 0 ){
-                                return;
-                              } else {
-                                handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) - 1)
-                              }
-                            }}
-                          />
-                        </ProductCartBtn>
-                        <ProductPriceWrapper>
-                          <ProductPrice>
-                            {CURRENCY}
-                            {addon.salePrice ? addon.salePrice : addon.price}
-                          </ProductPrice>
-
-                          {discountInPercent ? (
-                            <SalePrice>
+                  {groupedAddon.map(addon => {
+                    if(addon.type === 'SNG') {
+                      return (
+                        <Select
+                          disabled={!isInCart(id)}
+                          options={addon.childs.map(m => ({label: m.addon_name, value: m.id}))}
+                          onChange={(e) => handleAddonChange(e.value ,addon.childs)}
+                        />
+                      )
+                    }
+                    return (
+                        <ProductCartWrapper>
+                        <p>
+                          {addon.name}
+                        </p>
+                        <PriceContainer>
+                          <ProductCartBtn>
+                            <StyledCounter
+                              className={!isInCart(id) && 'disabled'}
+                              value={getAddon(id, addon.id).quantity || 0}
+                              onIncrement={() => handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) + 1)}
+                              onDecrement={() => {
+                                if(addon.quantity === 0 ){
+                                  return;
+                                } else {
+                                  handleAddOn(id, addon.id, (getAddon(id, addon.id).quantity || 0) - 1)
+                                }
+                              }}
+                            />
+                          </ProductCartBtn>
+                          <ProductPriceWrapper>
+                            <ProductPrice>
                               {CURRENCY}
-                              {addon.price}
-                            </SalePrice>
-                          ) : null}
-                        </ProductPriceWrapper>
-                      </PriceContainer>
-                    </ProductCartWrapper>
-                  ))}
+                              {addon.salePrice ? addon.salePrice : addon.price}
+                            </ProductPrice>
+
+                            {discountInPercent ? (
+                              <SalePrice>
+                                {CURRENCY}
+                                {addon.price}
+                              </SalePrice>
+                            ) : null}
+                          </ProductPriceWrapper>
+                        </PriceContainer>
+                      </ProductCartWrapper>
+                    )
+                  }
+                  )}
                 </React.Fragment>
               )}
               
